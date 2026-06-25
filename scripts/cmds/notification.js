@@ -1,6 +1,6 @@
 const { getStreamsFromAttachment } = global.utils;
 
-const botName = "Minato";
+const botName = "𝗠𝗶𝗻𝗮𝘁𝗼";
 
 module.exports = {
 	config: {
@@ -26,66 +26,41 @@ module.exports = {
 	langs: {
 		en: {
 			missingMessage:
-`🚀 ❲ ${botName} Notification ❳ 🚀
+` ❲ MINATO NAMIKAZE  ❳ 
 ━━━━━━━━━━━━━━━
-╭── ⚠️ 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗠𝗮𝗻𝗾𝘂𝗮𝗻𝘁 ───
-│ 💬 Veuillez entrer
-│ le message que vous
-│ voulez envoyer à
-│ tous les groupes.
-│
-│ 🤖 ${botName} attend
-│ votre notification.
-│
-│ ✍️ Exemple :
-│ notification Bonjour
-╰──────────────────
+💬 ᴠᴇᴜɪʟʟᴇᴢ ᴇɴᴛʀᴇʀ ʟᴇ ᴍᴇssᴀɢᴇ ǫᴜᴇ ᴠᴏᴜs ᴠᴏᴜʟᴇᴢ ǫᴜᴇ ᴊ'ᴇɴᴠᴏɪᴇ ᴀ̀ ᴛᴏᴜs ʟᴇs ɢʀᴏᴜᴘᴇs.
+
+⚡ ᴊ'ᴀᴛᴛᴇɴᴅs ᴠᴏs ᴏʀᴅʀᴇs, ᴇ́ᴄʀɪᴠᴇᴢ ᴠᴏᴛʀᴇ ɴᴏᴛɪғɪᴄᴀᴛɪᴏɴ.
+
+✍️ ᴇxᴇᴍᴘʟᴇ : ɴᴏᴛɪғɪᴄᴀᴛɪᴏɴ ʙᴏɴᴊᴏᴜʀ
 ━━━━━━━ ✕ ━━━━━━`,
 
 			notification:
-`🚀 ❲ ${botName} Notification ❳ 🚀
+` ❲ MINATO NAMIKAZE  ❳ 
 ━━━━━━━━━━━━━━━
-╭── 📢 𝗡𝗼𝘁𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻 ───
-│ 📡 Message officiel
-│ envoyé par l'admin
-│ de ${botName}.
-│
-│ ⚠️ Merci de ne pas
-│ répondre à ce message.
-╰──────────────────
+📡 ᴍᴇssᴀɢᴇ ᴏғғɪᴄɪᴇʟ ᴇɴᴠᴏʏᴇ́ ᴘᴀʀ ᴍᴏɴ ᴀᴅᴍɪɴ.
+
+⚠️ ᴍᴇʀᴄɪ ᴅᴇ ɴᴇ ᴘᴀs ʀᴇ́ᴘᴏɴᴅʀᴇ ᴀ̀ ᴄᴇ ᴍᴇssᴀɢᴇ.
 ━━━━━━━ ✕ ━━━━━━`,
 
 			sendingNotification:
-`🚀 ❲ ${botName} Notification ❳ 🚀
+` ❲ MINATO NAMIKAZE  ❳ 
 ━━━━━━━━━━━━━━━
-╭── 📤 𝗘𝗻𝘃𝗼𝗶 𝗘𝗻 𝗖𝗼𝘂𝗿𝘀 ───
-│ 📡 ${botName} commence
-│ l'envoi de la notification
-│ vers %1 groupe(s).
-╰──────────────────
+⚡ ᴊᴇ ᴅᴇ́ᴘʟᴏɪᴇ ᴍᴀ ᴛᴇᴄʜɴɪǫᴜᴇ ᴇᴛ ᴄᴏᴍᴍᴇɴᴄᴇ ʟ'ᴇɴᴠᴏɪ ᴅᴇ ʟᴀ ɴᴏᴛɪғɪᴄᴀᴛɪᴏɴ ᴠᴇʀs %1 ɢʀᴏᴜᴘᴇ(s).
 ━━━━━━━ ✕ ━━━━━━`,
 
 			sentNotification:
-`🚀 ❲ ${botName} Notification ❳ 🚀
+` ❲ MINATO NAMIKAZE  ❳ 
 ━━━━━━━━━━━━━━━
-╭── ✅ 𝗘𝗻𝘃𝗼𝗶 𝗥𝗲́𝘂𝘀𝘀𝗶 ───
-│ 📡 ${botName} a envoyé
-│ la notification avec
-│ succès à %1 groupe(s).
-╰──────────────────
+⚡ ᴊ'ᴀɪ ᴛʀᴀɴsᴍɪs ʟᴀ ɴᴏᴛɪғɪᴄᴀᴛɪᴏɴ ᴀᴠᴇᴄ sᴜᴄᴄᴇ̀s ᴀ̀ %1 ɢʀᴏᴜᴘᴇ(s).
 ━━━━━━━ ✕ ━━━━━━`,
 
 			errorSendingNotification:
-`🚀 ❲ ${botName} Notification ❳ 🚀
+` ❲ MINATO NAMIKAZE  ❳ 
 ━━━━━━━━━━━━━━━
-╭── ❌ 𝗘𝗿𝗿𝗲𝘂𝗿 ───
-│ ⚠️ ${botName} n'a pas
-│ pu envoyer le message
-│ à %1 groupe(s).
-│
-│ 📌 Vérifiez les erreurs
-│ affichées ci-dessous.
-╰──────────────────
+⚠️ ᴊᴇ ɴ'ᴀɪ ᴘᴀs ᴘᴜ ᴇɴᴠᴏʏᴇʀ ʟᴇ ᴍᴇssᴀɢᴇ ᴀ̀ %1 ɢʀᴏᴜᴘᴇ(s).
+
+📌 ᴠᴇ́ʀɪғɪᴇᴢ ʟᴇs ᴇʀʀᴇᴜʀs ᴄɪ-ᴅᴇssᴏᴜs.
 ━━━━━━━ ✕ ━━━━━━
 
 %2`
@@ -112,9 +87,8 @@ module.exports = {
 			body:
 `${getLang("notification")}
 ━━━━━━━━━━━━━━━
-╭── 💬 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 ${botName} ───
-│ ${args.join(" ")}
-╰──────────────────`,
+💬 𝗠𝗲𝘀𝘀𝗮𝗴𝗲 𝗱𝗲 ${botName} :
+${args.join(" ")}`,
 			attachment: await getStreamsFromAttachment(
 				[
 					...event.attachments,
@@ -228,3 +202,4 @@ module.exports = {
 		message.reply(msg);
 	}
 };
+					
