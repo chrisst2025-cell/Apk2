@@ -18,9 +18,7 @@ module.exports = {
 
     if (!q) {
       return api.sendMessage(
-`🚀 ❲ 𝗦𝗲𝗻𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 ❳ 🚀
-━━━━━━━━━━━━━━━
-╭── ⚠️ 𝗘𝗿𝗿𝗲𝘂𝗿 ───
+`╭── ⚠️ 𝗘𝗿𝗿𝗲𝘂𝗿 ───
 │ 👤 ${user}
 │
 │ 💬 𝖴𝗍𝗂𝗅𝗂𝗌𝖾 Minato
@@ -28,17 +26,14 @@ module.exports = {
 │
 │ ✍️ 𝖤𝗑𝖾𝗆𝗉𝗅𝖾 :
 │ Minato bonjour
-╰──────────────────
-━━━━━━━ ✕ ━━━━━━`,
+╰──────────────────`,
         event.threadID,
         event.messageID
       );
     }
 
     return api.sendMessage(
-`🚀 ❲ 𝗦𝗲𝗻𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 ❳ 🚀
-━━━━━━━━━━━━━━━
-╭── 🚫 𝗔𝗰𝗰𝗲̀𝘀 𝗥𝗲𝗳𝘂𝘀𝗲́ ───
+`╭── 🚫 𝗔𝗰𝗰𝗲̀𝘀 𝗥𝗲𝗳𝘂𝘀𝗲́ ───
 │ 👤 ${user}
 │
 │ 📡 𝖨𝗆𝗉𝗈𝗌𝗌𝗂𝖻𝗅𝖾
@@ -49,8 +44,7 @@ module.exports = {
 │
 │ 🤖 𝖤𝗑𝖾𝗆𝗉𝗅𝖾 :
 │ Minato comment ça va ?
-╰──────────────────
-━━━━━━━ ✕ ━━━━━━`,
+╰──────────────────`,
       event.threadID,
       event.messageID
     );
@@ -66,9 +60,7 @@ module.exports = {
 
     if (!m[2] || m[2].trim() === "") {
       return api.sendMessage(
-`🚀 ❲ 𝗦𝗲𝗻𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 ❳ 🚀
-━━━━━━━━━━━━━━━
-╭── ⚠️ 𝗘𝗿𝗿𝗲𝘂𝗿 ───
+`╭── ⚠️ 𝗘𝗿𝗿𝗲𝘂𝗿 ───
 │ 👤 ${user}
 │
 │ 💬 𝖴𝗍𝗂𝗅𝗂𝗌𝖾 Minato
@@ -76,17 +68,14 @@ module.exports = {
 │
 │ ✍️ 𝖤𝗑𝖾𝗆𝗉𝗅𝖾 :
 │ Minato salut
-╰──────────────────
-━━━━━━━ ✕ ━━━━━━`,
+╰──────────────────`,
         event.threadID,
         event.messageID
       );
     }
 
     return api.sendMessage(
-`🚀 ❲ 𝗦𝗲𝗻𝘁 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆 ❳ 🚀
-━━━━━━━━━━━━━━━
-╭── 🚫 𝗔𝗰𝗰𝗲̀𝘀 𝗥𝗲𝗳𝘂𝘀𝗲́ ───
+`╭── 🚫 𝗔𝗰𝗰𝗲̀𝘀 𝗥𝗲𝗳𝘂𝘀𝗲́ ───
 │ 👤 ${user}
 │
 │ 📡 𝖨𝗆𝗉𝗈𝗌𝗌𝗂𝖻𝗅𝖾
@@ -97,8 +86,7 @@ module.exports = {
 │
 │ 🤖 𝖤𝗑𝖾𝗆𝗉𝗅𝖾 :
 │ Minato aide moi
-╰──────────────────
-━━━━━━━ ✕ ━━━━━━`,
+╰──────────────────`,
       event.threadID,
       event.messageID
     );
