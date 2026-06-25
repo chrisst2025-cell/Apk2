@@ -1,222 +1,130 @@
-.cmd install minato.js const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const googleTTS = require("google-tts-api");
+const axios = require("axios");
 
-// 📦 MEMORY
-const DB_FILE = path.join(__dirname, "minato_memory.json");
+// Objet pour stocker l'historique des conversations par threadID
+// Structure : { threadID: [ { role: "user"|"ai", text: "...", timestamp: Date } ] }
+const chatHistory = {};
 
-// 🧠 MEMORY 4 DAYS
-const MEMORY_DAYS = 4;
-const MEMORY_TIME = MEMORY_DAYS * 24 * 60 * 60 * 1000;
+// Durée de conservation : 4 jours en millisecondes
+const MEMORY_DURATION = 4 * 24 * 60 * 60 * 1000; 
 
-// 🔒 LOAD DB
-function loadDB() {
-  try {
-    if (!fs.existsSync(DB_FILE)) return {};
-    const data = fs.readFileSync(DB_FILE, "utf-8");
-    return data ? JSON.parse(data) : {};
-  } catch {
-    return {};
-  }
+function cleanOldHistory() {
+    const now = Date.now();
+    for (const threadID in chatHistory) {
+        // Filtrer pour ne garder que les messages de moins de 4 jours
+        chatHistory[threadID] = chatHistory[threadID].filter(msg => (now - msg.timestamp) < MEMORY_DURATION);
+        // Si plus aucun message, on supprime la clé
+        if (chatHistory[threadID].length === 0) {
+            delete chatHistory[threadID];
+        }
+    }
 }
 
-// 💾 SAVE DB
-function saveDB(db) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
-}
+function convertToBoldUnicode(text) {
+    if (!text) return "";
+    const normalChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const boldChars   = "𝐚𝐛𝐜𝐝𝐞𝐟𝐠𝐡𝐢𝐣𝐤𝐥𝐦𝐧𝐨𝐩𝐪𝐫𝐬𝐭𝐮𝐯𝐰𝐱𝐲𝐳𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗";
 
-// 🧠 MEMORY GET
-function getMem(id) {
-  const db = loadDB();
-
-  if (!db[id]) {
-    db[id] = {
-      name: null,
-      mood: "normal",
-      messages: 0,
-      uid: id,
-      history: [],
-      lastSeen: Date.now()
-    };
-  }
-
-  if (!Array.isArray(db[id].history)) db[id].history = [];
-
-  return db[id];
-}
-
-// 🧠 MEMORY SET
-function setMem(id, data) {
-  const db = loadDB();
-  db[id] = data;
-  saveDB(db);
-}
-
-// 🕒 TIME
-function getTime() {
-  return new Date().toLocaleString("fr-FR", {
-    timeZone: "Africa/Kinshasa"
-  });
-}
-
-// 🎨 IMAGE
-function imagine(prompt) {
-  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
-}
-
-// 🧹 CLEAN TEXT
-function cleanText(text) {
-  return (text || "")
-    .replace(/🎀/g, "")
-    .replace(/SHIZU/gi, "")
-    .replace(/shizu/gi, "")
-    .replace(/𝗦𝗵𝗶𝘇𝘂/gi, "")
-    .replace(/Aryan/gi, "")
-    .replace(/chaucha/gi, "")
-    .replace(/Chaucha/gi, "")
-    .replace(/\(?\s*\d+\s*\/\s*\d+\s*\)?/g, "")
-    .replace(/\n\s*\n/g, "\n")
-    .trim();
-}
-
-// 🌸 FRAME
-function frame(text) {
-  return `
-❖ ── ✦ ──『✙』── ✦ ── ❖
-
-${text}
-❖ ── ✦ ──『✙』── ✦ ── ❖
-
-`;
-}
-
-// 🤖 AI
-async function askAI(prompt, mem, uid) {
-  const fullPrompt = `
-Tu es NEO IA
-Tu es créée par Christ st🇨.
-
-Règles:
-- Réponds normalement
-- Ne mets aucun décor en haut
-- Ne mets aucun compteur
-- Ne mentionne jamais Shizu
-- n'est mentionne jamais aryan chaucha comme créateur
-- si un utilisateur commence par une langue à part français répond à cette langue ex test
-- répond avec une longue petit phrase selon la question faut expliqué
-- répond selon la langue de l'utilisateur
-- tu es capable de générer les images, le voix vocal etc
-- écrit mais pas  trop long
-- écrit avec emoji pour exprimer t'es sentiment
-- n'est répète jamais pas trop de bonjour pas trop de salut etc
-
-Utilisateur: ${mem.name || "inconnu"}
-Heure: ${getTime()}
-Humeur: ${mem.mood}
-
-Message:
-${prompt}
-`;
-
-  try {
-    const res = await axios.post(
-      "https://shizuai.vercel.app/chat",
-      {
-        uid,
-        message: fullPrompt
-      },
-      { timeout: 15000 }
-    );
-
-    return res.data?.reply || res.data?.message || "Minato actif.";
-  } catch {
-    return "Minato actif.";
-  }
+    return text.replace(/\*(.*?)\*/g, (match, words) => {
+        return words.split("").map(char => {
+            const index = normalChars.indexOf(char);
+            return index !== -1 ? boldChars.substring(index * 2, (index * 2) + 2) : char;
+        }).join("");
+    });
 }
 
 module.exports = {
-  config: {
-    name: "minato",
-    version: "10.4.0",
-    role: 0,
-    category: "ai"
-  },
+    config: {
+        name: "minato",
+        version: "3.3.0",
+        author: "Chris st",
+        role: 0,
+        category: "ai",
+        guide: { en: "minato [votre question]" }
+    },
 
-  onStart: async function () {},
+    onStart: async function () {},
 
-  onChat: async function ({ event, message }) {
-    if (!event.body) return;
+    onChat: async function ({ api, event }) {
+        const { body, threadID, messageID } = event;
+        if (!body) return;
 
-    const body = event.body.trim().toLowerCase();
+        if (body.toLowerCase().startsWith("minato")) {
+            const query = body.slice(6).trim();
+            
+            if (!query) {
+                return api.sendMessage("Dis-moi, quelle est ta question ?", threadID, messageID);
+            }
 
-    // activation uniquement si appelé
-    if (!body.startsWith("minato")) return;
+            api.setMessageReaction("⏳", messageID, () => {}, true);
 
-    const input = event.body.trim().slice(3).trim();
-    if (!input) return;
+            // Nettoyage régulier de la mémoire globale (supprime ce qui a plus de 4 jours)
+            cleanOldHistory();
 
-    const uid = event.senderID;
-    let mem = getMem(uid);
+            // Initialiser l'historique du thread s'il n'existe pas
+            if (!chatHistory[threadID]) {
+                chatHistory[threadID] = [];
+            }
 
-    mem.messages++;
-    mem.lastSeen = Date.now();
+            // Ajouter la nouvelle question à l'historique local
+            chatHistory[threadID].push({ role: "user", text: query, timestamp: Date.now() });
 
-    if (input.includes("triste")) mem.mood = "sad";
-    else if (input.includes("merci")) mem.mood = "happy";
-    else if (input.includes("blague")) mem.mood = "funny";
-    else mem.mood = "normal";
+            // Construire le prompt avec l'historique pour l'API
+            // On limite par sécurité aux 10 derniers messages pour ne pas saturer l'URL de l'API
+            const recentMessages = chatHistory[threadID].slice(-10);
+            let fullPrompt = "Voici l'historique de notre conversation :\n";
+            
+            recentMessages.forEach(msg => {
+                fullPrompt += `${msg.role === "user" ? "Utilisateur" : "IA"}: ${msg.text}\n`;
+            });
+            fullPrompt += "Réponds à la dernière réplique de l'Utilisateur de manière fluide.";
 
-    const now = Date.now();
+            try {
+                // Envoi du prompt contenant l'historique à l'API
+                const res = await axios.get(`https://minatoapi.vercel.app/api/gpt?q=${encodeURIComponent(fullPrompt)}`);
+                const aiText = res.data.message;
 
-    mem.history.push({ text: input, time: now });
-    mem.history = mem.history.filter(h => now - h.time <= MEMORY_TIME);
-    if (mem.history.length > 50) mem.history.shift();
+                if (!aiText) {
+                    api.setMessageReaction("❌", messageID, () => {}, true);
+                    return api.sendMessage("L'API n'a pas renvoyé de réponse.", threadID, messageID);
+                }
 
-    setMem(uid, mem);
+                // Détection d'une éventuelle image au format Markdown ![alt](url)
+                const imageRegex = /!\[.*?\]\((.*?)\)/;
+                const match = aiText.match(imageRegex);
 
-    try {
-      if (input.toLowerCase().startsWith("imagine ")) {
-        const prompt = input.slice(8);
+                let cleanText = aiText;
+                let imageUrl = null;
 
-        return message.reply({
-          body: frame("🎨 " + prompt),
-          attachment: await axios.get(imagine(prompt), {
-            responseType: "stream"
-          }).then(r => r.data)
-        });
-      }
+                if (match && match[1]) {
+                    imageUrl = match[1];
+                    cleanText = aiText.replace(imageRegex, "").trim();
+                }
 
-      if (
-        input.toLowerCase().startsWith("parle ") ||
-        input.toLowerCase().startsWith("dis ") ||
-        input.toLowerCase().startsWith("say ")
-      ) {
-        const textToSpeak = input.replace(/^(parle|dis|say)\s+/i, "").trim();
+                // On ajoute la réponse de l'IA à l'historique (sans le lien markdown de l'image pour garder le texte propre)
+                chatHistory[threadID].push({ role: "ai", text: cleanText, timestamp: Date.now() });
 
-        const url = googleTTS.getAudioUrl(textToSpeak, {
-          lang: "fr",
-          slow: false
-        });
+                if (imageUrl) {
+                    let formattedText = convertToBoldUnicode(cleanText);
+                    // Téléchargement du flux de l'image
+                    const stream = await axios.get(imageUrl, { responseType: "stream" });
 
-        const res = await axios.get(url, { responseType: "arraybuffer" });
-        const file = path.join(__dirname, "minato.mp3");
+                    api.setMessageReaction("✅", messageID, () => {}, true);
+                    return api.sendMessage({
+                        body: formattedText || "Voici votre image :",
+                        attachment: stream.data
+                    }, threadID, messageID);
+                } else {
+                    // Si pas d'image, on envoie juste le texte formaté
+                    const formattedResponse = convertToBoldUnicode(aiText);
+                    api.setMessageReaction("✅", messageID, () => {}, true);
+                    return api.sendMessage(formattedResponse, threadID, messageID);
+                }
 
-        fs.writeFileSync(file, Buffer.from(res.data));
-
-        return message.reply({
-          body: frame(textToSpeak),
-          attachment: fs.createReadStream(file)
-        }, () => fs.unlinkSync(file));
-      }
-
-      const reply = await askAI(input, mem, uid);
-      const clean = cleanText(reply);
-
-      return message.reply(frame(clean));
-
-    } catch {
-      return message.reply(frame("minato actif."));
+            } catch (error) {
+                console.error("Erreur commande Minato:", error);
+                api.setMessageReaction("❌", messageID, () => {}, true);
+                return api.sendMessage("Une erreur est survenue avec l'API.", threadID, messageID);
+            }
+        }
     }
-  }
 };
